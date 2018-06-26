@@ -1,0 +1,22 @@
+#!/bin/bash
+
+slave="mod-slave"
+
+connect=jack_connect
+disconnect=jack_disconnect
+
+case "$1" in
+    -r|--r|-reverse|--reverse)
+        connect=jack_disconnect
+        disconnect=jack_connect
+    ;;
+esac
+
+$disconnect mod-monitor:out_1           system:playback_1
+$disconnect mod-monitor:out_2           system:playback_2
+$connect    mod-monitor:out_1           "$slave":audio_to_slave_1
+$connect    mod-monitor:out_2           "$slave":audio_to_slave_2
+$connect    "$slave":audio_from_slave_1 system:playback_1
+$connect    "$slave":audio_from_slave_2 system:playback_2
+
+exit
